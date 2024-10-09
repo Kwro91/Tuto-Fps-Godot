@@ -1,0 +1,180 @@
+[gd_scene load_steps=11 format=3 uid="uid://b0nne6oy83fho"]
+
+[ext_resource type="Script" path="res://Controller/scripts/fps_controller.gd" id="1_7erxv"]
+[ext_resource type="PackedScene" uid="uid://bto34gldlxe86" path="res://assets/weapons/SM_SciFi_Weapons_01.fbx" id="2_urkyj"]
+[ext_resource type="Script" path="res://Controller/scripts/reticle.gd" id="3_d6den"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_h2r7m"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_m54qi"]
+albedo_color = Color(1, 0.231373, 0.27451, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_t45nu"]
+material = SubResource("StandardMaterial3D_m54qi")
+
+[sub_resource type="Animation" id="Animation_331l3"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CollisionShape3D:shape:height")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [2.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("CollisionShape3D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 1, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("CameraController:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 1.5, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_lypac"]
+resource_name = "crouch"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CollisionShape3D:shape:height")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [2.0, 1.5]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("CollisionShape3D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 1, 0), Vector3(0, 0.75, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("CameraController:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 1.5, 0), Vector3(0, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_6jpqi"]
+_data = {
+"RESET": SubResource("Animation_331l3"),
+"crouch": SubResource("Animation_lypac")
+}
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_4u5b8"]
+
+[node name="CharacterBody3D" type="CharacterBody3D" node_paths=PackedStringArray("CAMERA_CONTROLLER", "ANIMATIONPLAYER", "CROUCH_SHAPECAST")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.883995, 0)
+script = ExtResource("1_7erxv")
+CAMERA_CONTROLLER = NodePath("CameraController/Camera3D")
+ANIMATIONPLAYER = NodePath("AnimationPlayer")
+CROUCH_SHAPECAST = NodePath("ShapeCast3D")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_h2r7m")
+
+[node name="PlaceholerMesh" type="MeshInstance3D" parent="CollisionShape3D"]
+mesh = SubResource("CapsuleMesh_t45nu")
+
+[node name="CameraController" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+
+[node name="Camera3D" type="Camera3D" parent="CameraController"]
+
+[node name="Weapon" type="Node3D" parent="CameraController/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.680625, 0.226207)
+
+[node name="SM_SciFi_Weapons_01" parent="CameraController/Camera3D/Weapon" instance=ExtResource("2_urkyj")]
+transform = Transform3D(-0.996195, 0, -0.0871556, 0, 1, 0, 0.0871556, 0, -0.996195, 0.373, 0.4, -0.55)
+
+[node name="ReflectionProbe" type="ReflectionProbe" parent="CameraController"]
+update_mode = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_6jpqi")
+}
+
+[node name="ShapeCast3D" type="ShapeCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+shape = SubResource("SphereShape3D_4u5b8")
+target_position = Vector3(0, 0.5, 0)
+debug_shape_custom_color = Color(0, 0.929412, 0, 1)
+
+[node name="UserInterface" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="Reticle" type="CenterContainer" parent="UserInterface" node_paths=PackedStringArray("LineTop", "LineBot", "LineRight", "LineLeft")]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_d6den")
+LineTop = NodePath("TopLine")
+LineBot = NodePath("BotLine")
+LineRight = NodePath("RightLine")
+LineLeft = NodePath("LeftLine")
+
+[node name="TopLine" type="Line2D" parent="UserInterface/Reticle"]
+width = 2.0
+
+[node name="BotLine" type="Line2D" parent="UserInterface/Reticle"]
+width = 2.0
+
+[node name="RightLine" type="Line2D" parent="UserInterface/Reticle"]
+width = 2.0
+
+[node name="LeftLine" type="Line2D" parent="UserInterface/Reticle"]
+width = 2.0
+
+[connection signal="animation_started" from="AnimationPlayer" to="." method="_on_animation_player_animation_started"]

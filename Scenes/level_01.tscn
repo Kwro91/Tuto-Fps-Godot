@@ -1,0 +1,98 @@
+[gd_scene load_steps=15 format=3 uid="uid://k7fyq2dmt5f2"]
+
+[ext_resource type="PackedScene" uid="uid://b0nne6oy83fho" path="res://Scenes/fps_controller.tscn" id="1_28c3x"]
+[ext_resource type="Environment" uid="uid://dsay4gdr8k6ur" path="res://Ressources/environment/WE_test.tres" id="1_lee1h"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_y1axi"]
+albedo_color = Color(0.105912, 0.0422623, 0.209857, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4eifo"]
+material = SubResource("StandardMaterial3D_y1axi")
+size = Vector3(30, 0.5, 30)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_oiuvl"]
+size = Vector3(100, 1, 100)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_grgrg"]
+albedo_color = Color(0.803629, 0.386591, 0.540743, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_nreew"]
+material = SubResource("StandardMaterial3D_grgrg")
+size = Vector3(3, 3, 3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_15q7g"]
+size = Vector3(3, 3, 3)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i3t7q"]
+albedo_color = Color(0.702417, 0.700194, 0, 1)
+
+[sub_resource type="PrismMesh" id="PrismMesh_vrxxv"]
+material = SubResource("StandardMaterial3D_i3t7q")
+size = Vector3(10, 1, 5)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_i21iw"]
+points = PackedVector3Array(-5, 0, -2.5, -5, 0, 2.5, 5, 0, -2.5, 5, 0, 2.5, 0, 1, 2.5, 0, 1, -2.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i8w13"]
+albedo_color = Color(1, 1, 0.309804, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_p05us"]
+material = SubResource("StandardMaterial3D_i8w13")
+size = Vector3(6, 0.5, 4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_onx66"]
+size = Vector3(6, 0.5, 4)
+
+[node name="Node3D" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("1_lee1h")
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_4eifo")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Floor"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor/StaticBody3D"]
+shape = SubResource("BoxShape3D_oiuvl")
+
+[node name="Box" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.57695, 1.72475, 8.68753)
+mesh = SubResource("BoxMesh_nreew")
+skeleton = NodePath("../Floor")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Box"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Box/StaticBody3D"]
+shape = SubResource("BoxShape3D_15q7g")
+
+[node name="Ramp" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.23074, 0.674235, 0)
+mesh = SubResource("PrismMesh_vrxxv")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Ramp"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ramp/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.515801, 0)
+shape = SubResource("ConvexPolygonShape3D_i21iw")
+
+[node name="CharacterBody3D" parent="." instance=ExtResource("1_28c3x")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.32164, 1.98532, 3.33206)
+
+[node name="LowPlatform" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.2915, 1.93351, 8.38177)
+mesh = SubResource("BoxMesh_p05us")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="LowPlatform"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LowPlatform/StaticBody3D"]
+shape = SubResource("BoxShape3D_onx66")
+
+[node name="HighPlatform" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.13999, 2.41078, 8.38177)
+mesh = SubResource("BoxMesh_p05us")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="HighPlatform"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HighPlatform/StaticBody3D"]
+shape = SubResource("BoxShape3D_onx66")
