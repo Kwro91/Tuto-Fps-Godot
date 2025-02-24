@@ -1,5 +1,7 @@
 extends CharacterBody3D
 
+@export var HP : int = 100
+@export var Armor : int = 0
 @export var SPEED : float = 5.0
 @export var SPEED_CROUCH : float = 2.0
 @export var JUMP_VELOCITY : float = 4.5
