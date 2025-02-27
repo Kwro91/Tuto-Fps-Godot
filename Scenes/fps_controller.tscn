@@ -1,10 +1,11 @@
-[gd_scene load_steps=18 format=3 uid="uid://b0nne6oy83fho"]
+[gd_scene load_steps=20 format=3 uid="uid://b0nne6oy83fho"]
 
 [ext_resource type="Script" path="res://Controller/scripts/fps_controller.gd" id="1_7erxv"]
 [ext_resource type="PackedScene" uid="uid://bto34gldlxe86" path="res://assets/weapons/SM_SciFi_Weapons_01.fbx" id="2_urkyj"]
 [ext_resource type="Script" path="res://Controller/scripts/GunTest.gd" id="3_2bwux"]
 [ext_resource type="Script" path="res://Controller/scripts/reticle.gd" id="3_d6den"]
 [ext_resource type="Script" path="res://Controller/scripts/debug_panel.gd" id="4_0npj8"]
+[ext_resource type="AudioStream" uid="uid://35famux4bjuk" path="res://assets/sounds/sci-fi-weapon-shoot-firing-plasma-ku-01-233816.mp3" id="4_p2vio"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_h2r7m"]
 
@@ -50,6 +51,8 @@ _data = {
 "FireAnim": SubResource("Animation_xw3gx"),
 "RESET": SubResource("Animation_sdnrw")
 }
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_tfmq5"]
 
 [sub_resource type="Animation" id="Animation_331l3"]
 length = 0.001
@@ -179,12 +182,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 [node name="Hand" type="Node3D" parent="CameraController/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.680625, 0.226207)
 
-[node name="GunTest" parent="CameraController/Camera3D/Hand" node_paths=PackedStringArray("ANIMATION_GUN", "CAMERA", "RAYCAST") instance=ExtResource("2_urkyj")]
-transform = Transform3D(-0.913546, 0, 0.406737, 0, 1, 0, -0.406737, 0, -0.913546, 0.29, 0.42, -0.5)
+[node name="GunTest" parent="CameraController/Camera3D/Hand" node_paths=PackedStringArray("ANIMATION_GUN", "CAMERA", "RAYCAST", "FIRE_SOUND") instance=ExtResource("2_urkyj")]
+transform = Transform3D(-0.979925, 0, 0.199368, 0, 1, 0, -0.199368, 0, -0.979925, 0.29, 0.42, -0.5)
 script = ExtResource("3_2bwux")
 ANIMATION_GUN = NodePath("AnimationGun")
 CAMERA = NodePath("../..")
 RAYCAST = NodePath("../../RayCast3D")
+FIRE_SOUND = NodePath("AudioStreamPlayer3D")
 
 [node name="AnimationGun" type="AnimationPlayer" parent="CameraController/Camera3D/Hand/GunTest"]
 root_node = NodePath("../../../../..")
@@ -192,9 +196,20 @@ libraries = {
 "": SubResource("AnimationLibrary_j2fmr")
 }
 
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="CameraController/Camera3D/Hand/GunTest"]
+stream = ExtResource("4_p2vio")
+volume_db = -35.0
+
 [node name="RayCast3D" type="RayCast3D" parent="CameraController/Camera3D"]
-transform = Transform3D(1.91069e-15, 4.37114e-08, -1, 1, -4.37114e-08, 0, -4.37114e-08, -1, -4.37114e-08, 0, 0, 0)
+transform = Transform3D(1.91069e-15, 4.37114e-08, -1, 1, -4.37114e-08, 0, -4.37114e-08, -1, -4.37114e-08, -0.24, 0.24, 0)
+visible = false
 target_position = Vector3(0, 150, 0)
+
+[node name="SeeRaycastInGame" type="MeshInstance3D" parent="CameraController/Camera3D/RayCast3D"]
+transform = Transform3D(-1.27664e-15, 1.77636e-15, -0.15, -2.92061e-08, 0.15, 1.77636e-15, 0.15, 2.92061e-08, -1.27664e-15, 2.38419e-07, 5.06978, 2.21607e-07)
+visible = false
+mesh = SubResource("CylinderMesh_tfmq5")
+skeleton = NodePath("../..")
 
 [node name="ReflectionProbe" type="ReflectionProbe" parent="CameraController"]
 update_mode = 1

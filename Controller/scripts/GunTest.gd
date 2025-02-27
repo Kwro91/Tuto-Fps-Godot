@@ -5,12 +5,13 @@ extends Node3D
 @export var ANIMATION_GUN : AnimationPlayer
 @export var CAMERA : Camera3D
 @export var RAYCAST : RayCast3D
-
+@export var FIRE_SOUND : AudioStreamPlayer3D
 var target
 
 func _fire():
 	if (Input.is_action_pressed("left_click")):
 		if not (ANIMATION_GUN.is_playing()):
+			FIRE_SOUND.play()
 			if (RAYCAST.is_colliding()):
 				target = RAYCAST.get_collider()
 				if target && target.is_in_group("Enemy"):
