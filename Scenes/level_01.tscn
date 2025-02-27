@@ -1,7 +1,8 @@
-[gd_scene load_steps=15 format=3 uid="uid://k7fyq2dmt5f2"]
+[gd_scene load_steps=16 format=3 uid="uid://k7fyq2dmt5f2"]
 
 [ext_resource type="PackedScene" uid="uid://b0nne6oy83fho" path="res://Scenes/fps_controller.tscn" id="1_28c3x"]
 [ext_resource type="Environment" uid="uid://dsay4gdr8k6ur" path="res://Ressources/environment/WE_test.tres" id="1_lee1h"]
+[ext_resource type="PackedScene" uid="uid://c4dmrohgner6p" path="res://Scenes/enemy.tscn" id="4_7xcn2"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_y1axi"]
 albedo_color = Color(0.105912, 0.0422623, 0.209857, 1)
@@ -96,3 +97,6 @@ mesh = SubResource("BoxMesh_p05us")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="HighPlatform/StaticBody3D"]
 shape = SubResource("BoxShape3D_onx66")
+
+[node name="Enemy" parent="." instance=ExtResource("4_7xcn2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.393832, -12.604)

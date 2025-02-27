@@ -5,6 +5,8 @@ extends CharacterBody3D
 @export var SPEED : float = 5.0
 @export var SPEED_CROUCH : float = 2.0
 @export var JUMP_VELOCITY : float = 4.5
+@export var WEAPON : Node3D
+@export var RAYCAST : RayCast3D
 
 #pour la camera :
 @export var TILT_LOWER_LIMIT := deg_to_rad(-90.0)
@@ -28,9 +30,9 @@ var	_tilt_input : float
 var _is_crouching : bool = false
 
 func _input(event):
-	if(event.is_action_pressed("exit")):
+	if(Input.is_action_pressed("exit")):
 		get_tree().quit()
-	if event.is_action_pressed("crouch") and TOGGLE_CROUCH == true:
+	if Input.is_action_pressed("crouch") and TOGGLE_CROUCH == true:
 		_toggle_crouch()
 	if event.is_action_pressed("crouch") and _is_crouching ==false and TOGGLE_CROUCH == false: #Hold to crouch
 		_crouching(true)
@@ -118,15 +120,22 @@ func _on_animation_player_animation_started(anim_name: StringName) -> void: #Se 
 	if anim_name == "crouch":
 		_is_crouching = !_is_crouching
 
-func _handle_auto_uncrouch(delta): #sert a se uncrouch tout seul si le crouch a ete release en dessous de qqch
+func _handle_auto_uncrouch(): #sert a se uncrouch tout seul si le crouch a ete release en dessous de qqch
 	if !Input.is_action_pressed("crouch") and _is_crouching == true and CROUCH_SHAPECAST.is_colliding() == false and TOGGLE_CROUCH == false: #Release to Uncrouch
 		_crouching(false)
+
+func _handle_action():
+	if(Input.is_action_pressed("left_click")):
+		WEAPON._fire()
+
+var target
 
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
 	_handle_gravity(delta)
 	_update_camera(delta)
 	_handle_movements(delta)
+	_handle_action()
 	if _is_crouching == true: #verifie que le joueur est crouch pour eviter les instructions inutiles
-		_handle_auto_uncrouch(delta)
+		_handle_auto_uncrouch()
 	move_and_slide() #Fct godot qui gere les collisions des box godot
